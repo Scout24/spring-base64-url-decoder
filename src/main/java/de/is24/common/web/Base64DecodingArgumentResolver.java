@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -32,12 +33,17 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
     String parameterName = parameter.getParameterName();
     String parameterPayload = webRequest.getParameter(parameterName);
     if (parameterPayload == null) {
-      throw new MissingServletRequestParameterException("Missing parameter {}.", parameterName);
+      DecodedUrl methodAnnotation = findMethodAnnotation(DecodedUrl.class, parameter);
+      if (methodAnnotation.required()) {
+        throw new MissingServletRequestParameterException("Missing parameter {}.", parameterName);
+      } else {
+        return null;
+      }
     }
     return parseUrl(parameterPayload);
   }
 
-  private URL parseUrl(String possiblyEncodedUrl) throws MalformedURLException {
+  private URL parseUrl(String possiblyEncodedUrl) throws ServletRequestBindingException {
     LOGGER.debug("Decoding possible encoded url. Payload: {}", possiblyEncodedUrl);
     try {
       return new URL(possiblyEncodedUrl);
@@ -46,7 +52,7 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
     }
   }
 
-  private URL decodeUrl(String possiblyEncodedUrl) throws MalformedURLException {
+  private URL decodeUrl(String possiblyEncodedUrl) throws ServletRequestBindingException {
     LOGGER.debug("Try to decode URL with URL decoder.");
     try {
       String decoded = URLDecoder.decode(possiblyEncodedUrl, SUPPORTED_ENCODING);
@@ -56,14 +62,14 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
     }
   }
 
-  private URL decodeBase64Url(String possiblyEncodedUrl) throws MalformedURLException {
+  private URL decodeBase64Url(String possiblyEncodedUrl) throws ServletRequestBindingException {
     LOGGER.debug("Try to decode url with Base64 decoder.");
     try {
       byte[] decodedUrl = Base64.getDecoder().decode(possiblyEncodedUrl);
       return new URL(new String(decodedUrl));
-    } catch (IllegalArgumentException iae) {
+    } catch (IllegalArgumentException | MalformedURLException iae) {
       LOGGER.debug("Failed to decode URL parameter.");
-      throw new MalformedURLException("Failed to decode URL parameter!");
+      throw new ServletRequestBindingException("Failed to decode URL parameter!");
     }
   }
 

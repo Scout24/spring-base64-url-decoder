@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.Base64;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
@@ -41,8 +40,20 @@ public class Base64DecodingArgumentResolverTest {
     .andExpect(MockMvcResultMatchers.forwardedUrl(TEST_URL));
   }
 
-  @Test(expected = MalformedURLException.class)
-  public void shouldThrowExceptionWhenDecodingFails() throws Exception {
-    mockMvc.perform(request(HttpMethod.GET, "/test?url=" + MALFORMED_URL));
+  @Test
+  public void shouldSendBadRequestWhenDecodingFails() throws Exception {
+    mockMvc.perform(request(HttpMethod.GET, "/test?url=" + MALFORMED_URL))
+    .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  public void notRequiredParameterShouldNotFail() throws Exception {
+    mockMvc.perform(request(HttpMethod.GET, "/testNotRequiredParameter"));
+  }
+
+  @Test
+  public void shouldFailWhenRequiredParameterIsNotSet() throws Exception {
+    mockMvc.perform(request(HttpMethod.GET, "/test")).andExpect(MockMvcResultMatchers.status().isBadRequest());
+
   }
 }

@@ -12,4 +12,9 @@ public class TestController {
     return url.toExternalForm();
   }
 
+  @RequestMapping("/testNotRequiredParameter")
+  public String testNotRequiredParameter(@DecodedUrl(required = false) URL url) {
+    return (url != null) ? url.toExternalForm() : "missing URL";
+  }
+
 }
