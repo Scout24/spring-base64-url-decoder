@@ -1,4 +1,4 @@
-package de.is24.common.spring;
+package de.is24.common.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,18 +9,21 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Base64;
 
 
 public class Base64DecodingArgumentResolver implements HandlerMethodArgumentResolver {
   private static final Logger LOGGER = LoggerFactory.getLogger(Base64DecodingArgumentResolver.class);
+  public static final String SUPPORTED_ENCODING = "UTF-8";
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return findMethodAnnotation(Base64DecodedUrl.class, parameter) != null;
+    return findMethodAnnotation(DecodedUrl.class, parameter) != null;
   }
 
   @Override
@@ -35,16 +38,32 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
   }
 
   private URL parseUrl(String possiblyEncodedUrl) throws MalformedURLException {
+    LOGGER.debug("Decoding possible encoded url. Payload: {}", possiblyEncodedUrl);
     try {
       return new URL(possiblyEncodedUrl);
     } catch (MalformedURLException e) {
-      try {
-        byte[] decodedUrl = Base64.getDecoder().decode(possiblyEncodedUrl);
-        return new URL(new String(decodedUrl));
-      } catch (IllegalArgumentException iae) {
-        LOGGER.warn("Failed to decode URL parameter with payload: {}", possiblyEncodedUrl);
-        throw new MalformedURLException("Failed to decode URL parameter!");
-      }
+      return decodeUrl(possiblyEncodedUrl);
+    }
+  }
+
+  private URL decodeUrl(String possiblyEncodedUrl) throws MalformedURLException {
+    LOGGER.debug("Try to decode URL with URL decoder.");
+    try {
+      String decoded = URLDecoder.decode(possiblyEncodedUrl, SUPPORTED_ENCODING);
+      return new URL(decoded);
+    } catch (MalformedURLException | UnsupportedEncodingException e) {
+      return decodeBase64Url(possiblyEncodedUrl);
+    }
+  }
+
+  private URL decodeBase64Url(String possiblyEncodedUrl) throws MalformedURLException {
+    LOGGER.debug("Try to decode url with Base64 decoder.");
+    try {
+      byte[] decodedUrl = Base64.getDecoder().decode(possiblyEncodedUrl);
+      return new URL(new String(decodedUrl));
+    } catch (IllegalArgumentException iae) {
+      LOGGER.debug("Failed to decode URL parameter.");
+      throw new MalformedURLException("Failed to decode URL parameter!");
     }
   }
 

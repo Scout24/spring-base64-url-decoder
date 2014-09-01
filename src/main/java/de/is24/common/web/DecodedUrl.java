@@ -1,4 +1,4 @@
-package de.is24.common.spring;
+package de.is24.common.web;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
-public @interface Base64DecodedUrl {
+public @interface DecodedUrl {
 }
