@@ -7,7 +7,40 @@
   <groupId>de.is24.common</groupId>
   <artifactId>spring-base64-url-decoder</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>Spring Base64 Url Decoder</name>
   
+  <organization>
+    <name>Immobilien Scout GmbH</name>
+    <url>http://www.immobilienscout24.de</url>
+  </organization>
+  <developers>
+    <developer>
+      <id>jrummler</id>
+      <name>Jens Rummler</name>
+      <url>https://github.com/jrummler</url>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/ImmobilienScout24/spring-base64-url-decoder.git</connection>
+    <url>scm:git:git://github.com/ImmobilienScout24/spring-base64-url-decoder.git</url>
+    <developerConnection>scm:git:git://github.com/ImmobilienScout24/spring-base64-url-decoder.git</developerConnection>
+  </scm>
+  <ciManagement>
+    <system>travis</system>
+    <url>https://travis-ci.org/ImmobilienScout24/spring-base64-url-decoder</url>
+  </ciManagement>
+
+
+  <description>This annotation delivers a annotation and adds a HandlerMethodArgumentResolver to the Spring MVC framework.</description>
+  <url>https://github.com/ImmobilienScout24/spring-base64-url-decoder</url>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+
   <properties>
     <spring.version>4.0.5.RELEASE</spring.version>
   </properties>
@@ -22,6 +55,25 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.4.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -62,6 +114,17 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
 
 
 </project>
