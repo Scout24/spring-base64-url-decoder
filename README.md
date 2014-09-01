@@ -1,5 +1,6 @@
 Spring Base64 Url Decoder
 =========================
+[![Build Status](https://api.travis-ci.org/ImmobilienScout24/spring-base64-url-decoder.svg?branch=master)](https://travis-ci.org/ImmobilienScout24/spring-base64-url-decoder)
 
 This annotation delivers a annotation and adds a [HandlerMethodArgumentResolver] to the [Spring] MVC framework.
 
