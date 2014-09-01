@@ -69,10 +69,11 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
 
   private <T extends Annotation> T findMethodAnnotation(Class<T> annotationClass, MethodParameter parameter) {
     T annotation = parameter.getParameterAnnotation(annotationClass);
-    if (annotation != null) {
-      return annotation;
-    }
+    return (annotation != null) ? annotation : searchForAnnotation(annotationClass, parameter);
+  }
 
+  private <T extends Annotation> T searchForAnnotation(Class<T> annotationClass, MethodParameter parameter) {
+    T annotation;
     Annotation[] annotationsToSearch = parameter.getParameterAnnotations();
     for (Annotation toSearch : annotationsToSearch) {
       annotation = AnnotationUtils.findAnnotation(toSearch.annotationType(), annotationClass);
