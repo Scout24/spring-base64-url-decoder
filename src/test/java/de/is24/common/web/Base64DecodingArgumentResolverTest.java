@@ -27,7 +27,7 @@ public class Base64DecodingArgumentResolverTest {
 
   @Test
   public void shouldDecodeUrlEncoded() throws Exception {
-    String encodedUrl = URLEncoder.encode(TEST_URL, "UTF-8");
+    String encodedUrl = URLEncoder.encode(TEST_URL, "ISO-8859-1");
     mockMvc.perform(request(HttpMethod.GET, "/test?url=" + encodedUrl))
     .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
     .andExpect(MockMvcResultMatchers.forwardedUrl(TEST_URL));
