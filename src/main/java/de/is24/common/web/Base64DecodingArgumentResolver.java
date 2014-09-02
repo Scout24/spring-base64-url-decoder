@@ -15,12 +15,23 @@ import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 
 public class Base64DecodingArgumentResolver implements HandlerMethodArgumentResolver {
   private static final Logger LOGGER = LoggerFactory.getLogger(Base64DecodingArgumentResolver.class);
-  public static final String SUPPORTED_ENCODING = "UTF-8";
+  public static final String STANDARD_ENCODING = StandardCharsets.ISO_8859_1.name();
+
+  private final String encoding;
+
+  public Base64DecodingArgumentResolver() {
+    this.encoding = STANDARD_ENCODING;
+  }
+
+  public Base64DecodingArgumentResolver(String encoding) {
+    this.encoding = encoding;
+  }
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -55,7 +66,7 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
   private URL decodeUrl(String possiblyEncodedUrl) throws ServletRequestBindingException {
     LOGGER.debug("Try to decode URL with URL decoder.");
     try {
-      String decoded = URLDecoder.decode(possiblyEncodedUrl, SUPPORTED_ENCODING);
+      String decoded = URLDecoder.decode(possiblyEncodedUrl, encoding);
       return new URL(decoded);
     } catch (MalformedURLException | UnsupportedEncodingException e) {
       return decodeBase64Url(possiblyEncodedUrl);

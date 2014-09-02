@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Base64;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
@@ -34,7 +35,7 @@ public class Base64DecodingArgumentResolverTest {
 
   @Test
   public void shouldDecodeBase64Encoded() throws Exception {
-    String encodedUrl = new String(Base64.getEncoder().encode(TEST_URL.getBytes()));
+    String encodedUrl = new String(Base64.getEncoder().encode(TEST_URL.getBytes(Charset.forName("ISO-8859-1"))));
     mockMvc.perform(request(HttpMethod.GET, "/test?url=" + encodedUrl))
     .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
     .andExpect(MockMvcResultMatchers.forwardedUrl(TEST_URL));
