@@ -27,9 +27,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:git://github.com/ImmobilienScout24/spring-base64-url-decoder.git</connection>
-    <url>scm:git:git://github.com/ImmobilienScout24/spring-base64-url-decoder.git</url>
-    <developerConnection>scm:git:git://github.com/ImmobilienScout24/spring-base64-url-decoder.git</developerConnection>
+    <connection>scm:git:https://github.com/ImmobilienScout24/spring-base64-url-decoder.git</connection>
+    <url>scm:git:https://github.com/ImmobilienScout24/spring-base64-url-decoder.git</url>
+    <developerConnection>scm:git:https://github.com/ImmobilienScout24/spring-base64-url-decoder.git</developerConnection>
   </scm>
   <ciManagement>
     <system>travis</system>
