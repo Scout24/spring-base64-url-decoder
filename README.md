@@ -2,7 +2,19 @@ Spring Base64 Url Decoder
 =========================
 [![Build Status](https://api.travis-ci.org/ImmobilienScout24/spring-base64-url-decoder.svg?branch=master)](https://travis-ci.org/ImmobilienScout24/spring-base64-url-decoder)
 
-This annotation delivers a annotation and adds a [HandlerMethodArgumentResolver] to the [Spring] MVC framework.
+This library delivers a annotation and adds a [HandlerMethodArgumentResolver] to the [Spring] MVC framework.
+
+Binaries
+--------
+Example for Maven:
+
+```xml
+    <dependency>
+      <groupId>de.is24.spring</groupId>
+      <artifactId>base64-url-decoder</artifactId>
+      <version>1.0</version>
+    </dependency>
+```
 
 Usage
 -----
