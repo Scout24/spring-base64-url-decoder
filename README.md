@@ -19,14 +19,14 @@ Example for Maven:
 Usage
 -----
 
-Annotate your parameters with the **@DecodedUrl** annotation in a MVC Controller according to this example:
+Annotate your parameters with the **@DecodedUri** annotation in a MVC Controller according to this example:
  
 ``` java
 @Controller
 public class TestController {
   @RequestMapping("/test")
-  public String test(@DecodedUrl URL url) {
-    return url.toExternalForm();
+  public String test(@DecodedUri URI uri) {
+    return url.toString();
   }
 }
 ```

@@ -8,11 +8,11 @@ import java.lang.annotation.Target;
 
 
 /**
- * Annotation to decode possible base 64 encoded urls.
+ * Annotation to decode possible base 64 encoded URIs.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
-public @interface DecodedUrl {
+public @interface DecodedUri {
   boolean required() default true;
 }

@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 public class Base64DecodingArgumentResolverTest {
   public static final String TEST_URL = "http://www.google.de?test=123&foo=bar";
+  public static final String RELATIVE_TEST_URL = "/some/relative/path";
   public static final String MALFORMED_URL = "<script>Some stupid script.</script>";
 
   private MockMvc mockMvc;
@@ -28,7 +29,7 @@ public class Base64DecodingArgumentResolverTest {
   @Test
   public void shouldDecodeUrlEncoded() throws Exception {
     String encodedUrl = URLEncoder.encode(TEST_URL, "ISO-8859-1");
-    mockMvc.perform(request(HttpMethod.GET, "/test?url=" + encodedUrl))
+    mockMvc.perform(request(HttpMethod.GET, "/test?uri=" + encodedUrl))
     .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
     .andExpect(MockMvcResultMatchers.forwardedUrl(TEST_URL));
   }
@@ -36,15 +37,25 @@ public class Base64DecodingArgumentResolverTest {
   @Test
   public void shouldDecodeBase64Encoded() throws Exception {
     String encodedUrl = new String(Base64.getEncoder().encode(TEST_URL.getBytes(Charset.forName("ISO-8859-1"))));
-    mockMvc.perform(request(HttpMethod.GET, "/test?url=" + encodedUrl))
+    mockMvc.perform(request(HttpMethod.GET, "/test?uri=" + encodedUrl))
     .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
     .andExpect(MockMvcResultMatchers.forwardedUrl(TEST_URL));
   }
 
   @Test
   public void shouldSendBadRequestWhenDecodingFails() throws Exception {
-    mockMvc.perform(request(HttpMethod.GET, "/test?url=" + MALFORMED_URL))
+    mockMvc.perform(request(HttpMethod.GET, "/test?uri=" + MALFORMED_URL))
     .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  public void shouldDecodeRelativeUrls() throws Exception {
+    String encodedRelativeUrl = new String(
+      Base64.getEncoder().encode(RELATIVE_TEST_URL.getBytes(Charset.forName("ISO-8859-1"))));
+    mockMvc.perform(request(HttpMethod.GET, "/test?uri=" + encodedRelativeUrl))
+    .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK.value()))
+    .andExpect(MockMvcResultMatchers.forwardedUrl(RELATIVE_TEST_URL));
+
   }
 
   @Test

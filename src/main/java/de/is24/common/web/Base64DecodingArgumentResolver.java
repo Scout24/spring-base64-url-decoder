@@ -12,8 +12,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -35,7 +35,7 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return findMethodAnnotation(DecodedUrl.class, parameter) != null;
+    return findMethodAnnotation(DecodedUri.class, parameter) != null;
   }
 
   @Override
@@ -44,43 +44,36 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
     String parameterName = parameter.getParameterName();
     String parameterPayload = webRequest.getParameter(parameterName);
     if (parameterPayload == null) {
-      DecodedUrl methodAnnotation = findMethodAnnotation(DecodedUrl.class, parameter);
+      DecodedUri methodAnnotation = findMethodAnnotation(DecodedUri.class, parameter);
       if (methodAnnotation.required()) {
         throw new MissingServletRequestParameterException("Missing parameter {}.", parameterName);
       } else {
         return null;
       }
     }
-    return parseUrl(parameterPayload);
+    return parseUri(parameterPayload);
   }
 
-  private URL parseUrl(String possiblyEncodedUrl) throws ServletRequestBindingException {
+  private URI parseUri(String possiblyEncodedUrl) throws ServletRequestBindingException {
     LOGGER.debug("Decoding possible encoded url. Payload: {}", possiblyEncodedUrl);
     try {
-      return new URL(possiblyEncodedUrl);
-    } catch (MalformedURLException e) {
-      return decodeUrl(possiblyEncodedUrl);
+      return new URI(urlDecode(decodeBase64Url(possiblyEncodedUrl)));
+    } catch (URISyntaxException | UnsupportedEncodingException e) {
+      throw new ServletRequestBindingException("Failed to decode URL parameter!");
     }
   }
 
-  private URL decodeUrl(String possiblyEncodedUrl) throws ServletRequestBindingException {
-    LOGGER.debug("Try to decode URL with URL decoder.");
-    try {
-      String decoded = URLDecoder.decode(possiblyEncodedUrl, encoding);
-      return new URL(decoded);
-    } catch (MalformedURLException | UnsupportedEncodingException e) {
-      return decodeBase64Url(possiblyEncodedUrl);
-    }
+  private String urlDecode(String possiblyEncodedUrl) throws UnsupportedEncodingException {
+    return URLDecoder.decode(possiblyEncodedUrl, encoding);
   }
 
-  private URL decodeBase64Url(String possiblyEncodedUrl) throws ServletRequestBindingException {
-    LOGGER.debug("Try to decode url with Base64 decoder.");
+  private String decodeBase64Url(String possiblyEncodedUrl) {
     try {
       byte[] decodedUrl = Base64.getDecoder().decode(possiblyEncodedUrl);
-      return new URL(new String(decodedUrl));
-    } catch (IllegalArgumentException | MalformedURLException iae) {
-      LOGGER.debug("Failed to decode URL parameter.");
-      throw new ServletRequestBindingException("Failed to decode URL parameter!");
+      return new String(decodedUrl);
+    } catch (IllegalArgumentException e) {
+      LOGGER.debug("Failed to decode Base64 URI. Maybe just URL encoded.");
+      return possiblyEncodedUrl;
     }
   }
 
