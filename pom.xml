@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.is24.spring</groupId>
   <artifactId>base64-url-decoder</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <packaging>jar</packaging>
   <name>Spring Base64 Url Decoder</name>
 
@@ -28,7 +28,7 @@
     <connection>scm:git:https://github.com/ImmobilienScout24/spring-base64-url-decoder.git</connection>
     <url>scm:git:https://github.com/ImmobilienScout24/spring-base64-url-decoder.git</url>
     <developerConnection>scm:git:https://github.com/ImmobilienScout24/spring-base64-url-decoder.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>base64-url-decoder-1.1</tag>
   </scm>
   <ciManagement>
     <system>travis</system>
