@@ -46,7 +46,7 @@ public class Base64DecodingArgumentResolver implements HandlerMethodArgumentReso
     if (parameterPayload == null) {
       DecodedUri methodAnnotation = findMethodAnnotation(DecodedUri.class, parameter);
       if (methodAnnotation.required()) {
-        throw new MissingServletRequestParameterException("Missing parameter {}.", parameterName);
+        throw new MissingServletRequestParameterException(parameterName, "String");
       } else {
         return null;
       }
