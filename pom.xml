@@ -46,6 +46,8 @@
 
   <properties>
     <spring.version>4.0.5.RELEASE</spring.version>
+    <jacoco.plugin.version>0.7.2.201409121644</jacoco.plugin.version>
+    <coveralls.plugin.version>3.0.1</coveralls.plugin.version>
   </properties>
   
   <build>
@@ -63,6 +65,24 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.4.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <version>${coveralls.plugin.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
