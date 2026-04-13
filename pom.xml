@@ -45,7 +45,7 @@
   </licenses>
 
   <properties>
-    <spring.version>4.0.5.RELEASE</spring.version>
+    <spring.version>6.1.21</spring.version>
     <jacoco.plugin.version>0.7.2.201409121644</jacoco.plugin.version>
     <coveralls.plugin.version>3.0.1</coveralls.plugin.version>
   </properties>
